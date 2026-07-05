@@ -46,19 +46,28 @@ async function main() {
 
   const renderTitlePage = () => {
     ;(doc as any).outline.addItem('Title Page')
-    doc.fontSize(48)
-    doc.y = doc.page.height / 2 - doc.heightOfString(title) / 2
-    doc.text(title, { align: 'center' })
-    const w = doc.widthOfString(title)
 
-    const byline = `By ${authors.join(',\n')}`
+    if (metadata.meta.cover && fs.existsSync(metadata.meta.cover)) {
+      doc.image(metadata.meta.cover, {
+        fit: [doc.page.width - 72, doc.page.height - 72],
+        align: 'center',
+        valign: 'center'
+      })
+    } else {
+      doc.fontSize(48)
+      doc.y = doc.page.height / 2 - doc.heightOfString(title) / 2
+      doc.text(title, { align: 'center' })
+      const w = doc.widthOfString(title)
 
-    doc.fontSize(20)
-    doc.y -= doc.heightOfString(byline) / 2
-    doc.text(byline, {
-      align: 'center',
-      indent: w - doc.widthOfString(byline)
-    })
+      const byline = `By ${authors.join(',\n')}`
+
+      doc.fontSize(20)
+      doc.y -= doc.heightOfString(byline) / 2
+      doc.text(byline, {
+        align: 'center',
+        indent: w - doc.widthOfString(byline)
+      })
+    }
 
     doc.addPage()
     doc.fontSize(fontSize)
