@@ -369,10 +369,14 @@ async function main() {
 
       assert(title, `unable to scrape title for asin: ${asin}`)
 
+      /* eslint-disable unicorn/prefer-dom-node-dataset -- this is a
+         Playwright Locator, not a DOM node; it has no `.dataset` */
       const coverImageUrl = await metaPage
         .locator('#landingImage, #imgBlkFront')
-        .first().dataset.oldHires
+        .first()
+        .getAttribute('data-old-hires')
         .catch(() => null)
+      /* eslint-enable unicorn/prefer-dom-node-dataset */
 
       let cover = ''
       if (coverImageUrl) {
